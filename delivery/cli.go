@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/rickyhidayatt/config"
+	"github.com/rickyhidayatt/model"
 	"github.com/rickyhidayatt/repository"
 	"github.com/rickyhidayatt/usecase"
 )
@@ -41,12 +42,26 @@ func Run() {
 	// }
 	// =================================================
 
-	// LIhat data By ID ++++++++++++++++++++++
-	customerCheckByID, err := customerUseCase.GetCustomerByID(1)
+	// // LIhat data By ID ++++++++++++++++++++++
+	// customerCheckByID, err := customerUseCase.GetCustomerByID(1)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(customerCheckByID)
+
+	// // +++++++++++++++++++++++++
+
+	//Update
+	var customer = model.Customer{
+		Id:      "2",
+		Name:    "Jhon Update",
+		Balance: 700000,
+	}
+	err := customerUseCase.UpdateCustomer(customer.Id, &customer)
+
 	if err != nil {
 		panic(err)
+	} else {
+		fmt.Println("Success UPDATE  Customer")
 	}
-	fmt.Println(customerCheckByID)
-
-	// +++++++++++++++++++++++++
 }

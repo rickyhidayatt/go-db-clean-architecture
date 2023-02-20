@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/rickyhidayatt/model"
 	"github.com/rickyhidayatt/repository"
@@ -14,6 +15,7 @@ type CustomerUseCase interface {
 	RegisterCustomer(newCustomer *model.Customer) error
 	GetAllCustomer() ([]model.Customer, error)
 	GetCustomerByID(id int) (model.Customer, error)
+	UpdateCustomer(idCustomer string, updateCustomer *model.Customer) error
 }
 
 type customerUseCase struct {
@@ -27,6 +29,21 @@ func (c *customerUseCase) RegisterCustomer(newCustomer *model.Customer) error {
 		return errors.New("Minimal 50.000")
 	} else {
 		return c.customerRepo.Insert(newCustomer)
+	}
+}
+
+func (c *customerUseCase) UpdateCustomer(idCustomer string, updateCustomer *model.Customer) error {
+
+	if idCustomer == updateCustomer.Id {
+		fmt.Println("ID SESUAI")
+	}
+
+	if len(updateCustomer.Name) < 3 || len(updateCustomer.Name) > 20 {
+		return errors.New("Nama Minimal 3 sampai 20")
+	} else if updateCustomer.Balance < 50000 {
+		return errors.New("Minimal 50.000")
+	} else {
+		return c.customerRepo.Update(idCustomer, updateCustomer)
 	}
 }
 

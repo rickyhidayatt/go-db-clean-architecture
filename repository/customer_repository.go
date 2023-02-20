@@ -13,6 +13,7 @@ type CustomerRepository interface {
 	Insert(newCustomer *model.Customer) error
 	GetAll() ([]model.Customer, error)
 	GetCustomerByID(id int) (model.Customer, error)
+	Update(updateId string, updateCustomer *model.Customer) error
 }
 
 type customerRepository struct {
@@ -23,6 +24,15 @@ func (c *customerRepository) Insert(newCustomer *model.Customer) error {
 	// func ini buat memenuhi kontrak
 	// defer c.db.Close()
 	_, err := c.db.Exec(utils.INSERT_CUSTOMER, newCustomer.Name, newCustomer.Balance)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *customerRepository) Update(updateId string, updateCustomer *model.Customer) error {
+	_, err := c.db.Exec(utils.UPDATE_CUSTOMER, updateId, updateCustomer.Name, updateCustomer.Balance)
 	if err != nil {
 		return err
 	}
