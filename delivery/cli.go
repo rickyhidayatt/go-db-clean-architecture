@@ -4,81 +4,39 @@ import (
 	"fmt"
 
 	"github.com/rickyhidayatt/config"
-	"github.com/rickyhidayatt/model"
 	"github.com/rickyhidayatt/repository"
 	"github.com/rickyhidayatt/usecase"
 )
 
+var Config = config.NewConfig()                         // ngambil koneksi dari package config
+var Db = Config.DbConnect()                             // konekin ke DB dari config
+var CustomerRepo = repository.NewCustomerRepository(Db) // panggil repository insert data
+var CustomerUseCase = usecase.NewCustomerUseCase(CustomerRepo)
+
 // jembatan dari beberapa package buat di tampilin di CLI
 func Run() {
+	pilihanMenu()
+	var pilihan int
 
-	config := config.NewConfig()                         // ngambil koneksi dari package config
-	db := config.DbConnect()                             // konekin ke DB dari config
-	customerRepo := repository.NewCustomerRepository(db) // panggil repository insert data
-	customerUseCase := usecase.NewCustomerUseCase(customerRepo)
+	for {
+		fmt.Scan(&pilihan)
+		if pilihan == 5 {
+			fmt.Println("Terimkasih sudah menggunakan aplikasi")
+			break
+		}
+		switch pilihan {
+		case 1:
+			addCustomer()
+			pilihanMenu()
 
-	// ==========================================
-	//insert data
-	// var customer = model.Customer{
-	// 	Name:    "Jhon Lenon",
-	// 	Balance: 700000,
-	// }
-	// err := customerUseCase.RegisterCustomer(&customer)
-
-	// if err != nil {
-	// 	panic(err)
-	// } else {
-	// 	fmt.Println("Success Create New Customer")
-	// }
-	// ==============================================
-
-	// LIHAT SEMUA DATA CUSTOMER ======================
-	// customer, err := customerUseCase.GetAllCustomer()
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// for _, v := range customer {
-	// 	fmt.Println(v)
-	// }
-	// =================================================
-
-	// // LIhat data By ID ++++++++++++++++++++++
-	// customerCheckByID, err := customerUseCase.GetCustomerByID(1)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println(customerCheckByID)
-
-	// // +++++++++++++++++++++++++
-
-	//Update
-	// var customer = model.Customer{
-	// 	Id:      "2",
-	// 	Name:    "Jhon Update",
-	// 	Balance: 700000,
-	// }
-	// err := customerUseCase.UpdateCustomer(customer.Id, &customer)
-
-	// if err != nil {
-	// 	panic(err)
-	// } else {
-	// 	fmt.Println("Success UPDATE  Customer")
-	// }
-
-	// ==============================
-
-	// Delete
-
-	var customer = model.Customer{
-		Id:      "2",
-		Name:    "Jhon Update",
-		Balance: 700000,
-	}
-	err := customerUseCase.DeteCustomerByID(customer.Id, &customer)
-
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("Success Delete  Customer")
+		case 2:
+			getDataCustomer()
+		case 3:
+			updatecust()
+			pilihanMenu()
+		case 4:
+			deleteCust()
+			pilihanMenu()
+		}
 	}
 }
