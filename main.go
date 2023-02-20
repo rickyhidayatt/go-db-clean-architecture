@@ -1,54 +1,28 @@
 package main
 
-import (
-	"database/sql"
-	"fmt"
-
-	_ "github.com/lib/pq"
-)
-
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "Repsol12"
-	dbname   = "incubation_class"
-)
-
-type Customer struct {
-	Id      string
-	Name    string
-	Balance int
-}
-
-var connectDB = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+import "github.com/rickyhidayatt/delivery"
 
 func main() {
-	db, err := sql.Open("postgres", connectDB)
-	defer db.Close()
+	delivery.Run()
 
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
-	if err := db.Ping(); err != nil {
-		fmt.Println(err.Error())
-	}
+	// // get environment variables
+	// dbHost := os.Getenv("DB_HOST")
+	// dbPort := os.Getenv("DB_PORT")
+	// dbUser := os.Getenv("DB_USER")
+	// dbPassword := os.Getenv("DB_PASSWORD")
+	// dbName := os.Getenv("DB_NAME")
+	// dbDriver := os.Getenv("DB_DRIVER")
 
-	newCustomer := Customer{
-		Name:    "Dicky Tanda tanya",
-		Balance: 1029292,
-	}
+	// fmt.Println("DB_HOST:", dbHost)
+	// fmt.Println("DB_PORT:", dbPort)
+	// fmt.Println("DB_USER:", dbUser)
+	// fmt.Println("DB_PASSWORD:", dbPassword)
+	// fmt.Println("DB_NAME:", dbName)
+	// fmt.Println("DB_DRIVER:", dbDriver)
 
-	insertData(db, newCustomer)
-}
-
-func insertData(db *sql.DB, newCustomer Customer) {
-	query := "INSERT INTO customer (name, balance) VALUES ($1, $2)"
-	result, err := db.Exec(query, newCustomer.Name, newCustomer.Balance)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	fmt.Println(result)
 }
