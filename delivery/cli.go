@@ -52,16 +52,33 @@ func Run() {
 	// // +++++++++++++++++++++++++
 
 	//Update
+	// var customer = model.Customer{
+	// 	Id:      "2",
+	// 	Name:    "Jhon Update",
+	// 	Balance: 700000,
+	// }
+	// err := customerUseCase.UpdateCustomer(customer.Id, &customer)
+
+	// if err != nil {
+	// 	panic(err)
+	// } else {
+	// 	fmt.Println("Success UPDATE  Customer")
+	// }
+
+	// ==============================
+
+	// Delete
+
 	var customer = model.Customer{
 		Id:      "2",
 		Name:    "Jhon Update",
 		Balance: 700000,
 	}
-	err := customerUseCase.UpdateCustomer(customer.Id, &customer)
+	err := customerUseCase.DeteCustomerByID(customer.Id, &customer)
 
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("Success UPDATE  Customer")
+		fmt.Println("Success Delete  Customer")
 	}
 }

@@ -16,6 +16,7 @@ type CustomerUseCase interface {
 	GetAllCustomer() ([]model.Customer, error)
 	GetCustomerByID(id int) (model.Customer, error)
 	UpdateCustomer(idCustomer string, updateCustomer *model.Customer) error
+	DeteCustomerByID(idCust string, deleteCustomer *model.Customer) error
 }
 
 type customerUseCase struct {
@@ -45,6 +46,13 @@ func (c *customerUseCase) UpdateCustomer(idCustomer string, updateCustomer *mode
 	} else {
 		return c.customerRepo.Update(idCustomer, updateCustomer)
 	}
+}
+
+func (c *customerUseCase) DeteCustomerByID(idCust string, deleteCustomer *model.Customer) error {
+	if idCust == deleteCustomer.Id {
+		fmt.Println("ID SESUAI")
+	}
+	return c.customerRepo.Delete(idCust)
 }
 
 func (c *customerUseCase) GetAllCustomer() ([]model.Customer, error) {

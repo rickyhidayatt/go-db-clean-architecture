@@ -1,6 +1,6 @@
 package repository
 
-// package repository bertanggung jawab untuk
+// package repository bertanggung jawab untuk CRUD Ke Database
 
 import (
 	"database/sql"
@@ -14,6 +14,7 @@ type CustomerRepository interface {
 	GetAll() ([]model.Customer, error)
 	GetCustomerByID(id int) (model.Customer, error)
 	Update(updateId string, updateCustomer *model.Customer) error
+	Delete(id string) error
 }
 
 type customerRepository struct {
@@ -38,6 +39,16 @@ func (c *customerRepository) Update(updateId string, updateCustomer *model.Custo
 	}
 
 	return nil
+}
+
+func (c *customerRepository) Delete(id string) error {
+	_, err := c.db.Exec(utils.DELETE_CUSTOMER, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func (c *customerRepository) GetAll() ([]model.Customer, error) {
