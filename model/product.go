@@ -1,12 +1,10 @@
 package model
 
-import "time"
-
 type Product struct {
 	Id        string
 	Name      string
 	Stock     int
 	Price     int
-	CreatedAt time.Time
-	ProductId string
+	CreatedAt string `db:"created_at"`
+	StoreId   string `db:"store_id"`
 }

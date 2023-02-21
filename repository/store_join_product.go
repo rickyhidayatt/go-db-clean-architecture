@@ -30,7 +30,7 @@ func (st *joinRepository) GetAllProduckAndStore() ([]model.Store, []model.Produc
 		var store model.Store
 		var product model.Product
 
-		err := rows.Scan(&store.Id, &store.SiupNumber, &store.Name, &product.Id, &product.Name, &product.Stock, &product.Price, &product.CreatedAt, &product.ProductId)
+		err := rows.Scan(&store.Id, &store.SiupNumber, &store.Name, &product.Id, &product.Name, &product.Stock, &product.Price, &product.CreatedAt, &product.StoreId)
 
 		if err != nil {
 			return nil, nil, err

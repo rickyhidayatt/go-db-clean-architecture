@@ -69,7 +69,7 @@ func (c *customerRepository) GetCustomerByID(id int) (model.Customer, error) {
 
 	err := rows.Scan(&customer.Id, &customer.Name, &customer.Balance)
 	if err != nil {
-		return customer, err
+		return model.Customer{}, err
 	}
 
 	return customer, nil

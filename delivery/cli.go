@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	"github.com/rickyhidayatt/config"
 	"github.com/rickyhidayatt/repository"
 	"github.com/rickyhidayatt/usecase"
@@ -14,7 +16,6 @@ var Db = Config.DbConnect()                             // konekin ke DB dari co
 var CustomerRepo = repository.NewCustomerRepository(Db) // panggil repository insert data
 var CustomerUseCase = usecase.NewCustomerUseCase(CustomerRepo)
 
-// jembatan dari beberapa package buat di tampilin di CLI
 func Run() {
 	// pilihanMenu()
 	// var pilihan int
@@ -42,28 +43,45 @@ func Run() {
 	// // }
 
 	// StoreCLI(Db)
+	CustomerCli(Db)
 	// JoinProdukStoreCLI(Db)
-	getDataCustomer()
+	// getDataCustomer()
 
 	// ProductCLI(Db)
 }
 
-func StoreCLI(db *sql.DB) {
-	storeRepo := repository.NewStoreRepository(db)
-	storeUsecase := usecase.NewStoreUseCase(storeRepo)
+func StoreCLI(db *sqlx.DB) {
+	productRepo := repository.NewProductRepository(db)
+	productUc := usecase.NewProductUseCase(productRepo)
 
-	stores, err := storeUsecase.GetAllStore()
+	storeRepo := repository.NewStoreRepository(db)
+	storeUseCase := usecase.NewStoreUseCase(storeRepo, productUc)
+
+	// GET ALL STORE
+	storeProducts, err := storeUseCase.GetAllStoreWithProducts()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	for _, store := range stores {
-		fmt.Println(store)
+	for _, product := range storeProducts {
+		fmt.Println(product)
 	}
 
-	// tinggal rapihkan di terminal nya
+	router := gin.Default()
+	router.GET("/customers", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"data KEY": storeProducts,
+		})
+	})
+
+	// jalankan gin
+	errGin := router.Run()
+	if err != nil {
+		panic(errGin)
+	}
 }
 
+// uji coba pake join
 func JoinProdukStoreCLI(db *sql.DB) {
 
 	joinRepo := repository.JoinStoreProdukRepository(db)
@@ -81,26 +99,13 @@ func JoinProdukStoreCLI(db *sql.DB) {
 
 	fmt.Println("Data Product:")
 	for _, product := range products {
-		fmt.Printf("ID: %s, Nama: %s, Stock: %d, Harga: %d, Created At: %s, Produk_ID : %s\n", product.Id, product.Name, product.Stock, product.Price, product.CreatedAt, product.ProductId)
+		fmt.Printf("ID: %s, Nama: %s, Stock: %d, Harga: %d, Created At: %s, Produk_ID : %s\n", product.Id, product.Name, product.Stock, product.Price, product.CreatedAt, product.StoreId)
 	}
-
-	// for _, store := range stores {
-	// 	fmt.Printf("Data Store:\nID: %s, Siup Number: %s, Nama: %s\n", store.Id, store.SiupNumber, store.Name)
-	// 	fmt.Println("Data Produk:")
-
-	// 	// Loop semua produk dari store saat ini
-	// 	for _, product := range products {
-	// 		// Cetak produk jika id store nya sama dengan id store saat ini
-	// 		if product.ProductId == store.Id {
-	// 			fmt.Printf("ID: %s, Nama: %s, Stock: %d, Harga: %d, Created At: %s\n", product.Id, product.Name, product.Stock, product.Price, product.CreatedAt)
-	// 		}
-	// 	}
-	// 	fmt.Println()
-	// }
-	// tinggal rapihkan di terminal nya
 }
 
-func ProductCLI(db *sql.DB) {
+// ==============
+
+func ProductCLI(db *sqlx.DB) {
 	storeRepo := repository.NewProductRepository(db)
 	productUsecase := usecase.NewProductUseCase(storeRepo)
 
@@ -115,9 +120,38 @@ func ProductCLI(db *sql.DB) {
 		fmt.Println("Stock : ", v.Stock)
 		fmt.Println("Price : ", v.Price)
 		fmt.Println("CreatedAt : ", v.CreatedAt)
-		fmt.Println("CreatedAt : ", v.ProductId)
+		fmt.Println("CreatedAt : ", v.StoreId)
 
 		fmt.Println()
 	}
 
+}
+
+func CustomerCli(db *sqlx.DB) {
+	customerRepo := repository.NewCustomerRepository(db)
+	customerUseCase := usecase.NewCustomerUseCase(customerRepo)
+
+	//GET LIST CUSTOMER
+	customers, err := customerUseCase.GetAllCustomer()
+	if err != nil {
+		panic(err)
+	}
+
+	router := gin.Default()
+	router.GET("/customers", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"data": customers,
+		})
+	})
+	errGin := router.Run()
+	if err != nil {
+		panic(errGin)
+	}
+
+	// for _, customer := range customers {
+	// 	fmt.Println(strings.Repeat("=", 20))
+	// 	fmt.Println("ID :", customer.Id)
+	// 	fmt.Println("NAME :", customer.Name)
+	// 	fmt.Println("BALANCE :", customer.Balance)
+	// }
 }

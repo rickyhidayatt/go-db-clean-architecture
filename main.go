@@ -5,24 +5,25 @@ import "github.com/rickyhidayatt/delivery"
 func main() {
 	delivery.Run()
 
-	// err := godotenv.Load()
+	// r := gin.Default() // menampilkan dengan logger
+	// // r := gin.New() // tidak ada midleware secara defaultnya
+
+	// r.GET("/ping", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"message": "Hai Ricky Ganteng",
+	// 	})
+	// })
+	// err := r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+
 	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
+	// 	panic(err)
 	// }
-
-	// // get environment variables
-	// dbHost := os.Getenv("DB_HOST")
-	// dbPort := os.Getenv("DB_PORT")
-	// dbUser := os.Getenv("DB_USER")
-	// dbPassword := os.Getenv("DB_PASSWORD")
-	// dbName := os.Getenv("DB_NAME")
-	// dbDriver := os.Getenv("DB_DRIVER")
-
-	// fmt.Println("DB_HOST:", dbHost)
-	// fmt.Println("DB_PORT:", dbPort)
-	// fmt.Println("DB_USER:", dbUser)
-	// fmt.Println("DB_PASSWORD:", dbPassword)
-	// fmt.Println("DB_NAME:", dbName)
-	// fmt.Println("DB_DRIVER:", dbDriver)
-
 }
+
+// fungtion handler function yang memiliki parameter cintex
+
+// func greeting(ctx *gin.Context){
+// 	name := ctx.Param("name")
+// 	ctx.String(200, "Hallo")
+
+// }
