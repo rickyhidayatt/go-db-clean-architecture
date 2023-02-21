@@ -7,7 +7,7 @@ import (
 
 type StoreUseCase interface {
 	GetAllStore() ([]model.Store, error)
-	// GetAllStore() ([]model.StoreProducts, error)
+	// GetAllStoreWithProducts() ([]model.StoreProducts, error)
 }
 
 type storeUseCase struct {

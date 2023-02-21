@@ -1,28 +1,20 @@
 package config
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 type Config struct {
-	Db *sql.DB
+	Db *sqlx.DB
 }
 
 func (c *Config) inittDb() {
-	// tampung nilai env dari terminal
-	// dbHost := os.Getenv("DB_HOST")
-	// dbPort := os.Getenv("DB_PORT")
-	// dbUser := os.Getenv("DB_USER")
-	// dbPass := os.Getenv("DB_PASSWORD")
-	// dbDriver := os.Getenv("DB_DRIVER")
-	// dbName := os.Getenv("DB_NAME")
-
 	// ============= panggil file env ===============
 	err := godotenv.Load()
 	if err != nil {
@@ -43,7 +35,7 @@ func (c *Config) inittDb() {
 	connectDB := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName)
 
 	//Buka koneksi
-	db, err := sql.Open(dbDriver, connectDB)
+	db, err := sqlx.Open(dbDriver, connectDB)
 	// defer db.Close()
 
 	if err != nil {
@@ -57,7 +49,7 @@ func (c *Config) inittDb() {
 	c.Db = db
 }
 
-func (c *Config) DbConnect() *sql.DB { // method untuk mendapatkan koneksi
+func (c *Config) DbConnect() *sqlx.DB { // method untuk mendapatkan koneksi
 	return c.Db
 }
 

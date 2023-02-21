@@ -3,8 +3,7 @@ package repository
 // package repository bertanggung jawab untuk CRUD Ke Database
 
 import (
-	"database/sql"
-
+	"github.com/jmoiron/sqlx"
 	"github.com/rickyhidayatt/model"
 	"github.com/rickyhidayatt/utils"
 )
@@ -18,13 +17,13 @@ type CustomerRepository interface {
 }
 
 type customerRepository struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 func (c *customerRepository) Insert(newCustomer *model.Customer) error {
 	// func ini buat memenuhi kontrak
 	// defer c.db.Close()
-	_, err := c.db.Exec(utils.INSERT_CUSTOMER, newCustomer.Name, newCustomer.Balance)
+	_, err := c.db.NamedExec(utils.INSERT_CUSTOMER, newCustomer)
 	if err != nil {
 		return err
 	}
@@ -52,19 +51,12 @@ func (c *customerRepository) Delete(id string) error {
 }
 
 func (c *customerRepository) GetAll() ([]model.Customer, error) {
-	rows, err := c.db.Query(utils.SELECT_CUSTOMER_LIST)
+
+	var customers []model.Customer // menampung dari looping di bawah
+	err := c.db.Select(&customers, utils.SELECT_CUSTOMER_LIST)
+
 	if err != nil {
 		return nil, err
-	}
-	var customers []model.Customer // menampung dari looping di bawah
-	for rows.Next() {
-		var customer model.Customer // apa yang mau di looping dari db
-
-		err := rows.Scan(&customer.Id, &customer.Name, &customer.Balance)
-		if err != nil {
-			return nil, err
-		}
-		customers = append(customers, customer)
 	}
 	return customers, nil
 
@@ -84,7 +76,7 @@ func (c *customerRepository) GetCustomerByID(id int) (model.Customer, error) {
 
 }
 
-func NewCustomerRepository(db *sql.DB) CustomerRepository {
+func NewCustomerRepository(db *sqlx.DB) CustomerRepository {
 	return &customerRepository{
 		db: db,
 	}

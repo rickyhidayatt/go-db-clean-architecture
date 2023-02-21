@@ -41,8 +41,9 @@ func Run() {
 	// // 	}
 	// // }
 
-	StoreCLI(Db)
+	// StoreCLI(Db)
 	// JoinProdukStoreCLI(Db)
+	getDataCustomer()
 
 	// ProductCLI(Db)
 }
