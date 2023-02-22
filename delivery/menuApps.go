@@ -69,7 +69,7 @@ func getDataCustomer() {
 		}
 
 	} else if pilih == 2 {
-		var idcust int
+		var idcust string
 		fmt.Print("Masukan ID Customer : ")
 		fmt.Scan(&idcust)
 		customerCheckByID, err := CustomerUseCase.GetCustomerByID(idcust)

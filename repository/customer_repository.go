@@ -11,7 +11,7 @@ import (
 type CustomerRepository interface {
 	Insert(newCustomer *model.Customer) error
 	GetAll() ([]model.Customer, error)
-	GetCustomerByID(id int) (model.Customer, error)
+	GetCustomerByID(id string) (model.Customer, error)
 	Update(updateId string, updateCustomer *model.Customer) error
 	Delete(id string) error
 }
@@ -62,7 +62,7 @@ func (c *customerRepository) GetAll() ([]model.Customer, error) {
 
 }
 
-func (c *customerRepository) GetCustomerByID(id int) (model.Customer, error) {
+func (c *customerRepository) GetCustomerByID(id string) (model.Customer, error) {
 	var customer model.Customer
 
 	rows := c.db.QueryRow(utils.SELECT_CUSTOMER_BY_ID, id)

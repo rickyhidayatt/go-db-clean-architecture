@@ -14,7 +14,7 @@ import (
 type CustomerUseCase interface {
 	RegisterCustomer(newCustomer *model.Customer) error
 	GetAllCustomer() ([]model.Customer, error)
-	GetCustomerByID(id int) (model.Customer, error)
+	GetCustomerByID(id string) (model.Customer, error)
 	UpdateCustomer(idCustomer string, updateCustomer *model.Customer) error
 	DeteCustomerByID(idCust string, deleteCustomer *model.Customer) error
 }
@@ -59,7 +59,7 @@ func (c *customerUseCase) GetAllCustomer() ([]model.Customer, error) {
 	return c.customerRepo.GetAll()
 }
 
-func (c *customerUseCase) GetCustomerByID(id int) (model.Customer, error) {
+func (c *customerUseCase) GetCustomerByID(id string) (model.Customer, error) {
 	return c.customerRepo.GetCustomerByID(id)
 }
 

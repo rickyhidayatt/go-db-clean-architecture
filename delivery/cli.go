@@ -3,6 +3,7 @@ package delivery
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
@@ -138,6 +139,7 @@ func CustomerCli(db *sqlx.DB) {
 	}
 
 	router := gin.Default()
+
 	router.GET("/customers", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"data": customers,
@@ -148,6 +150,30 @@ func CustomerCli(db *sqlx.DB) {
 		panic(errGin)
 	}
 
+	// percobaan nyari customers by id
+	router.GET("/customers/:id", func(ctx *gin.Context) {
+		customerID := ctx.Param("id")
+		if err != nil {
+			panic(err)
+		}
+
+		customer, err := customerUseCase.GetCustomerByID(customerID)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": "Customer not found",
+			})
+			return
+		}
+
+		ctx.JSON(200, gin.H{
+			"data": customer,
+		})
+	})
+
+	err = router.Run()
+	if err != nil {
+		panic(err)
+	}
 	// for _, customer := range customers {
 	// 	fmt.Println(strings.Repeat("=", 20))
 	// 	fmt.Println("ID :", customer.Id)
