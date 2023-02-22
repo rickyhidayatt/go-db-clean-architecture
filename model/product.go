@@ -1,10 +1,9 @@
 package model
 
 type Product struct {
-	Id        string
-	Name      string
-	Stock     int
-	Price     int
-	CreatedAt string `db:"created_at"`
-	StoreId   string `db:"store_id"`
+	Id      string `json:"id"`
+	Name    string `json:"name" binding:"required"`
+	Stock   int    `json:"stock" binding:"required"`
+	Price   int    `json:"price" binding:"required"`
+	StoreId string `db:"store_id"`
 }

@@ -7,6 +7,7 @@ import (
 )
 
 type ProductRepository interface {
+	Insert(newProduct model.Product) error
 	GetAll() ([]model.Product, error)
 	GetByStoreId(id string) ([]model.Product, error)
 }
@@ -15,8 +16,17 @@ type productRepository struct {
 	db *sqlx.DB
 }
 
+func (p *productRepository) Insert(newProduct model.Product) error {
+	_, err := p.db.NamedExec(utils.INSERT_PRODUCT, &newProduct)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *productRepository) GetAll() ([]model.Product, error) {
 	var products []model.Product
+
 	err := p.db.Select(&products, utils.SELECT_PRODUCT_LIST)
 	if err != nil {
 		return nil, err
