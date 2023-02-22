@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/rickyhidayatt/model"
 	"github.com/rickyhidayatt/repository"
@@ -14,9 +13,9 @@ import (
 type CustomerUseCase interface {
 	RegisterCustomer(newCustomer *model.Customer) error
 	GetAllCustomer() ([]model.Customer, error)
-	GetCustomerByID(id string) (model.Customer, error)
-	UpdateCustomer(idCustomer string, updateCustomer *model.Customer) error
-	DeteCustomerByID(idCust string, deleteCustomer *model.Customer) error
+	GetCustomerById(id string) (model.Customer, error)
+	UpdateCustomerById(customer model.Customer) error
+	DeleteCustomerById(id string) error
 }
 
 type customerUseCase struct {
@@ -25,46 +24,38 @@ type customerUseCase struct {
 
 func (c *customerUseCase) RegisterCustomer(newCustomer *model.Customer) error {
 	if len(newCustomer.Name) < 3 || len(newCustomer.Name) > 20 {
-		return errors.New("Nama Minimal 3 sampai 20")
+		return errors.New("Nama Minimal 3 sampai 20 Karakter")
 	} else if newCustomer.Balance < 50000 {
-		return errors.New("Minimal 50.000")
+		return errors.New("Minimal Saldo 50.000")
 	} else {
 		return c.customerRepo.Insert(newCustomer)
 	}
 }
 
-func (c *customerUseCase) UpdateCustomer(idCustomer string, updateCustomer *model.Customer) error {
-
-	if idCustomer == updateCustomer.Id {
-		fmt.Println("ID SESUAI")
-	}
-
-	if len(updateCustomer.Name) < 3 || len(updateCustomer.Name) > 20 {
-		return errors.New("Nama Minimal 3 sampai 20")
-	} else if updateCustomer.Balance < 50000 {
-		return errors.New("Minimal 50.000")
-	} else {
-		return c.customerRepo.Update(idCustomer, updateCustomer)
-	}
-}
-
-func (c *customerUseCase) DeteCustomerByID(idCust string, deleteCustomer *model.Customer) error {
-	if idCust == deleteCustomer.Id {
-		fmt.Println("ID SESUAI")
-	}
-	return c.customerRepo.Delete(idCust)
+func (c *customerUseCase) GetCustomerById(id string) (model.Customer, error) {
+	return c.customerRepo.GetById(id)
 }
 
 func (c *customerUseCase) GetAllCustomer() ([]model.Customer, error) {
 	return c.customerRepo.GetAll()
 }
 
-func (c *customerUseCase) GetCustomerByID(id string) (model.Customer, error) {
-	return c.customerRepo.GetCustomerByID(id)
+func (c *customerUseCase) UpdateCustomerById(customer model.Customer) error {
+	if len(customer.Name) < 3 || len(customer.Name) > 20 {
+		return errors.New("Nama Minimal 3 sampai 20 Karakter")
+	} else if customer.Balance < 50000 {
+		return errors.New("Minimal Saldo 50.000")
+	} else {
+		return c.customerRepo.UpdateById(customer)
+	}
 }
 
-func NewCustomerUseCase(customerRepositori repository.CustomerRepository) CustomerUseCase {
+func (c *customerUseCase) DeleteCustomerById(id string) error {
+	return c.customerRepo.DeleteById(id)
+}
+
+func NewCustomerUseCase(customerRepository repository.CustomerRepository) CustomerUseCase {
 	return &customerUseCase{
-		customerRepo: customerRepositori,
+		customerRepo: customerRepository,
 	}
 }

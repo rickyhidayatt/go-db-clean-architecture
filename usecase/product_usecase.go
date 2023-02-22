@@ -14,8 +14,8 @@ type productUseCase struct {
 	productRepo repository.ProductRepository
 }
 
-func (pr *productUseCase) GetAllProduct() ([]model.Product, error) {
-	return pr.productRepo.GetAll()
+func (p *productUseCase) GetAllProduct() ([]model.Product, error) {
+	return p.productRepo.GetAll()
 }
 
 func (p *productUseCase) GetProductByStoreId(storeId string) ([]model.Product, error) {

@@ -15,9 +15,9 @@ type productRepository struct {
 	db *sqlx.DB
 }
 
-func (st *productRepository) GetAll() ([]model.Product, error) {
+func (p *productRepository) GetAll() ([]model.Product, error) {
 	var products []model.Product
-	err := st.db.Select(&products, utils.SELECT_PRODUCT_LIST)
+	err := p.db.Select(&products, utils.SELECT_PRODUCT_LIST)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +35,8 @@ func (p *productRepository) GetByStoreId(id string) ([]model.Product, error) {
 	return products, nil
 }
 
-func NewProductRepository(dbStore *sqlx.DB) ProductRepository {
+func NewProductRepository(db *sqlx.DB) ProductRepository {
 	return &productRepository{
-		db: dbStore,
+		db: db,
 	}
 }

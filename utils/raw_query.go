@@ -4,11 +4,14 @@ const (
 	INSERT_CUSTOMER      = "INSERT INTO customer (name, balance) VALUES ($1, $2)"
 	SELECT_CUSTOMER_LIST = "SELECT * FROM customers"
 
-	SELECT_CUSTOMER_BY_ID  = "SELECT * FROM customer WHERE id = $1"
-	UPDATE_CUSTOMER        = "UPDATE customer SET name =$2, balance =$3 WHERE id = $1"
-	DELETE_CUSTOMER        = "DELETE FROM customer WHERE id = $1"
-	SELECT_STORE_LIST      = "SELECT * FROM mst_store"
-	SELECT_PRODUCT_LIST    = "SELECT * FROM mst_product"
+	SELECT_CUSTOMER_ID = "SELECT * FROM customer WHERE id = $1"
+	UPDATE_CUSTOMER    = "UPDATE customer SET name =$2, balance =$3 WHERE id = $1"
+	DELETE_CUSTOMER    = "DELETE FROM customer WHERE id = $1"
+
+	SELECT_STORE_LIST = "SELECT * FROM mst_store"
+
+	SELECT_PRODUCT_LIST = "SELECT * FROM mst_product"
+
 	SELECT_PRODUCT_STOREID = "SELECT * FROM mst_product WHERE store_id = $1"
 	// join
 	JOIN_PRODUCT_STORE = `

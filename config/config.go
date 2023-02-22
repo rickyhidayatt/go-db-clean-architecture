@@ -2,59 +2,48 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 type Config struct {
-	Db *sqlx.DB
+	DataSourceName string
 }
 
-func (c *Config) inittDb() {
-	// ============= panggil file env ===============
+func (c *Config) initDb() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		panic(err.Error())
 	}
-
-	// get environment variables
+	// tampung nilai ENV dari terminal
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
+	dbPass := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-	dbDriver := os.Getenv("DB_DRIVER")
 
-	// ============= panggil file env ===============
+	// data source name
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPass, dbName)
+	// buka koneksi
+	// db, err := sqlx.Open(dbDriver, dsn)
+	// menutup koneksi
+	// defer untuk menjalankan suatu statement diakhir block function / atau dieksekusi sebelum fungsi selesai berjalan
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
 
-	//konek  ke DB
-	connectDB := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", dbHost, dbPort, dbUser, dbPassword, dbName)
-
-	//Buka koneksi
-	db, err := sqlx.Open(dbDriver, connectDB)
-	// defer db.Close()
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	if err := db.Ping(); err != nil {
-		fmt.Println(err.Error())
-	}
-
-	c.Db = db
+	// check konfigurasi
+	// if err := db.Ping(); err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	c.DataSourceName = dsn
 }
 
-func (c *Config) DbConnect() *sqlx.DB { // method untuk mendapatkan koneksi
-	return c.Db
-}
-
-func NewConfig() Config { // biar bisa di panggil initDB dke publik
+func NewConfig() Config {
 	config := Config{}
-	config.inittDb()
-	return config // mengirimkan Objek config yang didalamnya terdapat attribut dari func initDb
+	config.initDb() // untuk menjalankan method yang didalamnya membuka koneksi ke DB
+	return config   // Mengirimkan Object Config yang didalamnya terdapat attribute bertipe data Koneksi, namun koneksi tidak dapat diakses secara
+	// langsung karena attribute bertipe private
 }

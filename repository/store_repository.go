@@ -27,8 +27,8 @@ func (st *storeRepository) GetAll() ([]model.Store, error) {
 	return stores, nil
 }
 
-func NewStoreRepository(dbStore *sqlx.DB) StoreRepository {
+func NewStoreRepository(dbConnect *sqlx.DB) StoreRepository {
 	return &storeRepository{
-		db: dbStore,
+		db: dbConnect,
 	}
 }
